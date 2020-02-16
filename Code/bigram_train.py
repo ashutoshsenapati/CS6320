@@ -10,8 +10,8 @@ Created on Sat Feb 15 01:30:45 2020
 
 @author: Srijita
 """
-trainpath="D:/Grad Studies/NLP/CS6320/Data/A1/"
-testpath="D:/Grad Studies/NLP/CS6320/Data/A1/"
+trainpath="D:/Grad Studies/NLP/A1/Data/"
+testpath="D:/Grad Studies/NLP/A1/Data/"
 vocab={}
 vocab_temp={}
 bigram={}
@@ -79,19 +79,19 @@ if __name__== "__main__":
        #delimit every line by a beginning and ending token
        test[i]='<s> '+test[i]
        test[i]=test[i]+" </s>"
-       vocab_list=test[i].split()
-       for j in vocab_list:
-           if j not in vocab.keys():
-              vocab[j]=0
-              
+#       vocab_list=test[i].split()
+#       for j in vocab_list:
+#           if j not in vocab.keys():
+#              vocab[j]=0
+#              
    #populate the keys of the bigram model           
-   for key in vocab.keys():
+   for key in vocab_temp.keys():
        bigram[key]={}
-       for key1 in vocab.keys():
+       for key1 in vocab_temp.keys():
            bigram[key][key1]=[0,0]
    
    #populate the count of the unigrams in vocab
-   for key in vocab.keys():
+   for key in vocab_temp.keys():
         if mode==0:
            key_count=0
         else:
@@ -127,7 +127,8 @@ if __name__== "__main__":
                    bigram_cnt=bigram_cnt+1  
                    
            bigram[key][key1][0]=(bigram_cnt)
-           bigram[key][key1][1]=(bigram_cnt/vocab[key])    
+           bigram[key][key1][1]=(bigram_cnt/vocab[key])  
+           print key, key1
    
    #print "Bigram is", bigram    
    
@@ -138,9 +139,9 @@ if __name__== "__main__":
        bigram_test_count_each=[]
        bigram_test_prob_each=[]
        for j in range(0,len(vocab_test)-1):
-           prob=bigram[vocab_test[j]][vocab_test[j+1]][1]
-           bigram_test_count_each.append((vocab_test[j+1]+"|"+vocab_test[j],bigram[vocab_test[j]][vocab_test[j+1]][0]))
-           bigram_test_prob_each.append((vocab_test[j+1]+"|"+vocab_test[j],bigram[vocab_test[j]][vocab_test[j+1]][1]))
+           prob=bigram[vocab_temp[j]][vocab_temp[j+1]][1]
+           bigram_test_count_each.append((vocab_temp[j+1]+"|"+vocab_temp[j],bigram[vocab_temp[j]][vocab_temp[j+1]][0]))
+           bigram_test_prob_each.append((vocab_temp[j+1]+"|"+vocab_temp[j],bigram[vocab_temp[j]][vocab_temp[j+1]][1]))
            probsum=probsum*prob
        bigram_test_count.append(bigram_test_count_each) 
        bigram_test_prob.append(bigram_test_prob_each) 
@@ -149,14 +150,9 @@ if __name__== "__main__":
            
    #Show all the metric of the test corpus
    print "*******************************************************************"
-   print "BIGRAM COUNTS FOR THE SENTENCES ARE"        
-   print bigram_test_count
-   print "*****************************************************************"
-   print "BIGRAM PROBABILITIES FOR THE SENTENCES ARE" 
-   print bigram_test_prob
-   print "*******************************************************************"
-   print "PROBABILITY OF EACH SENTENCE IS"
-   print prob_test
+   print "The bigram counts for each sentence are",        bigram_test_count
+   print "The bigram probabilities for each sentence are", bigram_test_prob
+   print "The probability of each sentence is",            prob_test
    print "*******************************************************************"
     
        
