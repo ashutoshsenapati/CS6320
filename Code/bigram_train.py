@@ -75,8 +75,8 @@ if __name__== "__main__":
            #print bigram
            #raw_input()
            
-   print "The size of unigram is", len(vocab)
-   print "The size of bigram is", len(bigram)
+   #print "The size of unigram is", len(vocab)
+   #print "The size of bigram is", len(bigram)
    
    vocab_size=len(vocab)
    bigram_test_count=[]
