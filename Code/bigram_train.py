@@ -156,14 +156,20 @@ if __name__== "__main__":
            
    #Show all the metric of the test corpus
    print "*******************************************************************"
-   print "BIGRAM COUNTS FOR THE SENTENCES ARE"        
-   print bigram_test_count
+   print "BIGRAM COUNTS FOR THE SENTENCES ARE" 
+   for i in range(0,len(test)):
+       print "                                                    "       
+       print bigram_test_count[i]
    print "*****************************************************************"
    print "BIGRAM PROBABILITIES FOR THE SENTENCES ARE" 
-   print bigram_test_prob
+   for i in range(0,len(test)):
+       print "                                                    "  
+       print bigram_test_prob[i]
    print "*******************************************************************"
    print "PROBABILITY OF EACH SENTENCE IS"
-   print prob_test
+   for i in range(0,len(test)):
+       print "                                                    "
+       print prob_test[i]
    print "*******************************************************************"
     
        
