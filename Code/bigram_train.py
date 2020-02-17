@@ -10,12 +10,10 @@ Created on Sat Feb 15 01:30:45 2020
 
 @author: Srijita
 """
-trainpath="D:/Grad Studies/NLP/A1/Data/"
-testpath="D:/Grad Studies/NLP/A1/Data/"
+#trainpath="C://Users//sxd170431//Desktop//Work//NLP//A1//Data//"
+#testpath="C://Users//sxd170431//Desktop//Work//NLP//A1//Data//"
 vocab={}
-vocab_temp={}
 bigram={}
-bigram_prob={}
 
 def readfile(filename):
     data=[]
@@ -26,15 +24,22 @@ def readfile(filename):
     
 #The main python module starts here
 if __name__== "__main__":
+   trainpath=sys.argv[1]
+   trainpath=sys.argv[2]
+   mode=int(sys.argv[3]) 
    init_token=['<s>','</s>'] 
-   train=readfile(trainpath+"train.txt")
-   test= readfile(trainpath+"test.txt")
+   train=readfile(trainpath+"//train.txt")
+   test= readfile(trainpath+"//test.txt")
    test_to_write=deepcopy(test)
    #print "The length of train is", len(train)
    #print "The length of test is", len(test)
    #If mode is 0, then no smoothening, else smoothening
-   mode=int(sys.argv[1])
-   print "The mode is", mode
+   
+   if mode==0:
+      print "bigram probabilities without laplace smoothing, mode= ", mode
+   else:
+      print "bigram probabilities WITH laplace smoothing, mode= ", mode 
+    
    for i in range(0,len(train)):
        #remove all unnecessary punctuations
        train[i]=train[i].replace(".", "")
@@ -53,12 +58,27 @@ if __name__== "__main__":
        train[i]='<s> '+train[i]
        train[i]=train[i]+" </s>"
        vocab_train=train[i].split()
+       #populate the unigram dictionary
        for j in vocab_train:
-           if j not in vocab_temp.keys():
-              vocab_temp[j]=0
-   vocab_size=len(vocab_temp)    
-   print "The train vocab size is", vocab_size
-   #Finding the probabilities of the test set   
+           if j not in vocab.keys():
+              vocab[j]=0
+       #populate the bigram dictionary
+       #print train[i]
+       for j in range(0,len(vocab_train)-1):
+           key=vocab_train[j]
+           key1=vocab_train[j+1]
+           #print key, key1
+           if key not in bigram.keys():
+              bigram[key]={}
+           if key1 not in bigram[key].keys():   
+              bigram[key][key1]=[0,0]
+           #print bigram
+           #raw_input()
+           
+   print "The size of unigram is", len(vocab)
+   print "The size of bigram is", len(bigram)
+   
+   vocab_size=len(vocab)
    bigram_test_count=[]
    bigram_test_prob=[]
    prob_test=[]
@@ -79,19 +99,9 @@ if __name__== "__main__":
        #delimit every line by a beginning and ending token
        test[i]='<s> '+test[i]
        test[i]=test[i]+" </s>"
-#       vocab_list=test[i].split()
-#       for j in vocab_list:
-#           if j not in vocab.keys():
-#              vocab[j]=0
-#              
-   #populate the keys of the bigram model           
-   for key in vocab_temp.keys():
-       bigram[key]={}
-       for key1 in vocab_temp.keys():
-           bigram[key][key1]=[0,0]
-   
-   #populate the count of the unigrams in vocab
-   for key in vocab_temp.keys():
+
+   #populate the count for the unigram model" 
+   for key in vocab.keys():
         if mode==0:
            key_count=0
         else:
@@ -103,7 +113,7 @@ if __name__== "__main__":
                if (key in train[j]) and (key in init_token):
                   key_count=key_count+1 
         vocab[key]=key_count    
-   
+   print "The unigram dictionary got populated"
    #print "Vocab is", vocab 
    #populate the bigram counts and probabilties     
    for key in bigram.keys():
@@ -120,39 +130,40 @@ if __name__== "__main__":
                      bigram_cnt=bigram_cnt+train[i].count(" "+key+"  "+key1+" ")
                 elif (" "+key+" "+key1+" " in train[i]) and (" "+key+"  "+key1+" " in train[i]): 
                      bigram_cnt=bigram_cnt+train[i].count(" "+key+" "+key1+" ")+train[i].count(" "+key+"  "+key1+" ")     
-                   #if key=="john" and key1=="boulnois":
-                   #   print train[i] 
               else:
                 if (key+" "+key1 in train[i]) or (key+"  "+key1 in train[i]):
                    bigram_cnt=bigram_cnt+1  
                    
            bigram[key][key1][0]=(bigram_cnt)
            bigram[key][key1][1]=(bigram_cnt/vocab[key])  
-           print key, key1
-   
-   #print "Bigram is", bigram    
-   
-   #Calculating the prob of each sentence in the test set
+           #print key, key1
+   print "The bigram dictionary got populated"   
+
+   print "Evaluating the sentences in the test set"     
    for i in range(0,len(test)):  
        vocab_test=test[i].split()
        probsum=1
        bigram_test_count_each=[]
        bigram_test_prob_each=[]
        for j in range(0,len(vocab_test)-1):
-           prob=bigram[vocab_temp[j]][vocab_temp[j+1]][1]
-           bigram_test_count_each.append((vocab_temp[j+1]+"|"+vocab_temp[j],bigram[vocab_temp[j]][vocab_temp[j+1]][0]))
-           bigram_test_prob_each.append((vocab_temp[j+1]+"|"+vocab_temp[j],bigram[vocab_temp[j]][vocab_temp[j+1]][1]))
+           prob=bigram[vocab_test[j]][vocab_test[j+1]][1]
+           bigram_test_count_each.append((vocab_test[j]+","+vocab_test[j+1],bigram[vocab_test[j]][vocab_test[j+1]][0]))
+           bigram_test_prob_each.append((vocab_test[j+1]+"|"+vocab_test[j],bigram[vocab_test[j]][vocab_test[j+1]][1]))
            probsum=probsum*prob
        bigram_test_count.append(bigram_test_count_each) 
        bigram_test_prob.append(bigram_test_prob_each) 
        prob_test.append((test_to_write[i],probsum))
-       #prob_test.append(probsum)
            
    #Show all the metric of the test corpus
    print "*******************************************************************"
-   print "The bigram counts for each sentence are",        bigram_test_count
-   print "The bigram probabilities for each sentence are", bigram_test_prob
-   print "The probability of each sentence is",            prob_test
+   print "BIGRAM COUNTS FOR THE SENTENCES ARE"        
+   print bigram_test_count
+   print "*****************************************************************"
+   print "BIGRAM PROBABILITIES FOR THE SENTENCES ARE" 
+   print bigram_test_prob
+   print "*******************************************************************"
+   print "PROBABILITY OF EACH SENTENCE IS"
+   print prob_test
    print "*******************************************************************"
     
        
