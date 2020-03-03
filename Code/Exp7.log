@@ -1,0 +1,14 @@
+nlp_classifier.py:28: UserWarning: genfromtxt: Empty input file: "/home/011/s/sx/sxd170431/bigram/A2_Data/aclImdb/train/pos/5122_9.txt"
+  train=np.genfromtxt(filename,dtype=str,delimiter="/n")
+nlp_classifier.py:28: UserWarning: genfromtxt: Empty input file: "/home/011/s/sx/sxd170431/bigram/A2_Data/aclImdb/train/neg/4179_4.txt"
+  train=np.genfromtxt(filename,dtype=str,delimiter="/n")
+nlp_classifier.py:28: UserWarning: genfromtxt: Empty input file: "/home/011/s/sx/sxd170431/bigram/A2_Data/aclImdb/train/neg/2425_4.txt"
+  train=np.genfromtxt(filename,dtype=str,delimiter="/n")
+/home/011/s/sx/sxd170431/.local/lib/python2.7/site-packages/sklearn/linear_model/logistic.py:433: FutureWarning: Default solver will be changed to 'lbfgs' in 0.22. Specify a solver to silence this warning.
+  FutureWarning)
+The command line arguments are nlp_classifier.py a b tfidf regression 0
+Creating tfidf features
+THe train feature, train label, test feature, test label are (25000, 68500) (25000,) (25000, 68500) (25000,)
+The features are (25000, 68500) (25000,) regression no
+Building Logistic Regression no regularization
+THe accuracy,precision,recall and F1-score are 0.8176 0.8572714182865371 0.76208 0.8068778587159071
